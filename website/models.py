@@ -47,7 +47,7 @@ class Model(models.Model):
     
     slug = models.SlugField(max_length=30, unique=True)
     libelle = models.CharField(max_length=100, unique=True)
-    experience_id = models.ForeignKey(Experience, on_delete=models.PROTECT, blank=True, null=True)
+    experience = models.ForeignKey(Experience, on_delete=models.PROTECT, blank=True, null=True)
     description = models.CharField(max_length=250, blank=True, null=True)
     score = models.IntegerField(default=0)
     path = models.FileField(upload_to='models/', validators=[ext_validator])
@@ -73,10 +73,10 @@ class Deploiement(models.Model):
         )
     
     slug = models.SlugField(max_length=30, unique=True)
-    model_id = models.ForeignKey(Model, on_delete=models.PROTECT, blank=True, null=True)
-    experience_id = models.ForeignKey(Experience, on_delete=models.PROTECT, blank=True, null=True)
-    status = models.CharField(max_length=2, choices=STATUS, default='IN')
-    state = models.CharField(max_length=2, choices=STATE, default='DE')
+    model = models.ForeignKey(Model, on_delete=models.PROTECT, blank=True, null=True)
+    experience = models.ForeignKey(Experience, on_delete=models.PROTECT, blank=True, null=True)
+    status = models.CharField(max_length=2, choices=STATUS, default='IN',unique=True)
+    state = models.CharField(max_length=2, choices=STATE, default='DE',unique=True)
     created_at = models.DateTimeField(default=timezone.now)
     saved_by = models.ForeignKey(User, on_delete=models.CASCADE)
 

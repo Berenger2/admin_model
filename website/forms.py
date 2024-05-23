@@ -24,3 +24,13 @@ class AddExperinceForm(forms.ModelForm):
         model = Experience
         fields = ['libelle', 'description']
         # exclude = ['slug', 'score', 'path', 'state', 'status', 'created_at']
+
+class AddDeploiementForm(forms.ModelForm):
+    model = forms.ModelChoiceField(queryset=Model.objects.all(), required=True, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Model'}))
+    experience = forms.ModelChoiceField(queryset=Experience.objects.all(), required=True, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Experience'}))
+    status = forms.ChoiceField(choices=Deploiement.STATUS, required=True, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Status'}))
+    state = forms.ChoiceField(choices=Deploiement.STATE, required=True, widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'State'}))
+    class Meta:
+        model = Deploiement
+        fields = ['model', 'experience', 'status', 'state']
+        # exclude = ['slug', 'score', 'path', 'state', 'status', 'created_at']

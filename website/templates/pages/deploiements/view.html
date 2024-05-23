@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<div  class="col-md-6 offset-md-3">
+{% if deploiement %}
+  <article>
+      <header>{{deploiement.experience}}</header>
+      <h5 class="card-title">{{deploiement.experience.libelle}}</h5>
+      <p class="card-text">{{deploiement.model.libelle}}</p>
+      <p class="card-text">{{deploiement.status}}</p>
+      <p class="card-text">{{deploiement.created_at| date:"d M Y" }}</p>	
+
+  </article>
+  {% endif %}
+  <a href="{%url 'deploiements'%}" class="btn btn-secondary ">Retour</a>
+  <div>
+  {% endif %}
+
+
+  {% endblock %}
+
+ 
+

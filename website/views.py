@@ -143,19 +143,70 @@ def experience_view(request, slug):
         experience = Experience.objects.get(slug=slug)
         return render(request, 'pages/experiences/view.html', {'experience': experience})
 
+### Deploiement
 
+def deploiements(request):
+    if request.user.is_anonymous:
+        messages.success(request, 'You need to connect to see this page')
+        return redirect('home')
+    else:
+        deploiements = Deploiement.objects.all()
+        return render(request, 'pages/deploiements/list.html', {'deploiements': deploiements})
+    
+def add_deploiement(request):
+    if request.user.is_anonymous:
+        messages.success(request, 'You need to connect to see this page')
+        return redirect('home')
+    else:
+        form = AddDeploiementForm(request.POST or None)
+        
+        if request.method == 'POST':
+            if form.is_valid():
+                
+                model = form.cleaned_data['model']
+                experience = form.cleaned_data['experience']
+                status = form.cleaned_data['status']
+                state = form.cleaned_data['state']
+                slug = slugify(model, allow_unicode=True)
+                save_by = request.user
 
-
-
-
-
-
-
-
-
-
-
-
+                add_dep= Deploiement(slug=slug, model=model, experience=experience, status=status, state=state, saved_by=save_by)
+                add_dep.save()
+                messages.success(request, 'The Deploiement was added successfully')
+                return redirect('deploiements')
+            else:
+                # Form is not valid, return a response
+                messages.error(request, 'The Deploiement was added successfully')
+                return render(request, 'pages/deploiements/add.html', {'form': form})
+        
+        return render(request, 'pages/deploiements/add.html', {'form': form})
+    
+def deploiement_edit(request, slug):
+    if request.user.is_anonymous:
+        messages.success(request, 'You need to connect to see this page')
+        return redirect('home')
+    else:
+        current_deploiement = Deploiement.objects.get(slug=slug)
+        form = AddDeploiementForm(request.POST or None, request.FILES or None, instance=current_deploiement)
+        if request.method == 'POST':
+            if form.is_valid():
+            
+                form.save()
+                messages.success(request, 'The deploiement has been successfully modified')
+                return redirect('deploiements')
+            else:
+                # Form is not valid, return a response
+                return render(request, 'pages/deploiements/edit.html', {'form': form, 'deploiement': current_deploiement})
+        else:
+            return render(request, 'pages/deploiements/edit.html', {'form': form, 'deploiement': current_deploiement})
+        
+def deploiement_view(request, slug):
+    if request.user.is_anonymous:
+        messages.success(request, 'You need to connect to see this page')
+        return redirect('home')
+    else:
+        deploiement = Deploiement.objects.get(slug=slug)
+        return render(request, 'pages/deploiements/view.html', {'deploiement': deploiement})
 
 ### USER
 def login_user(request):

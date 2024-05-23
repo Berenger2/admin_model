@@ -17,6 +17,12 @@ urlpatterns = [
     path('experience/add/',views.add_experience, name='add_experience'),
     path('experience/edit/<str:slug>',views.experience_edit, name='experience_edit'),
     path('experience/<str:slug>',views.experience_view, name='experience_view'),
+    
+    # Deploiements
+    path('deploiements/',views.deploiements, name='deploiements'),
+    path('deploiement/add/',views.add_deploiement, name='add_deploiement'),
+    path('deploiement/edit/<str:slug>',views.deploiement_edit, name='deploiement_edit'),
+    path('deploiement/<str:slug>',views.deploiement_view, name='deploiement_view'),
 
     # path('model/<str:>',views.logout_user, name='logout'),
 ]
