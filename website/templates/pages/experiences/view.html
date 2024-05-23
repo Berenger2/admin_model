@@ -2,14 +2,14 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div  class="col-md-6 offset-md-3">
-{% if model %}
+{% if experience %}
   <article>
-      <header>{{model.libelle}}</header>
-      <h5 class="card-title">{{model.libelle}}</h5>
-      <p class="card-text">{{model.description}}</p>
+      <header>{{experience.libelle}}</header>
+      <h5 class="card-title">{{experience.libelle}}</h5>
+      <p class="card-text">{{experience.description}}</p>
   </article>
   {% endif %}
-  <a href="{%url 'models'%}" class="btn btn-secondary ">Retour</a>
+  <a href="{%url 'experiences'%}" class="btn btn-secondary ">Retour</a>
   <div>
   {% endif %}
 
