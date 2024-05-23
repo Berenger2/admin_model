@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<div  class="col-md-6 offset-md-3">
+{% if model %}
+  <article>
+      <header>{{model.libelle}}</header>
+      <h5 class="card-title">{{model.libelle}}</h5>
+      <p class="card-text">{{model.description}}</p>
+  </article>
+  {% endif %}
+  <a href="{%url 'models'%}" class="btn btn-secondary ">Retour</a>
+  <div>
+  {% endif %}
+
+
+  {% endblock %}
+
+ 
+

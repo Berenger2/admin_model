@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<article class="col-md-6 offset-md-3">
+    <h1 class="my-3">Edit model</h1>
+      <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+      <br>
+      {{ form.as_p }}
+      <div class="form-group">
+          <button type="submit" class="btn btn-success">Edit</button>
+        </form>
+    </div>
+  </div>
+{% endblock %}

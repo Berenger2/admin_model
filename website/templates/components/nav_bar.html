@@ -1,0 +1,15 @@
+{% if user.is_authenticated %}
+  <nav>
+    <ul>
+      <li><strong><a href="{%url 'home'%}" class="secondary">TardyModels :: Model Management System</a></strong></li>
+    </ul>
+    
+    <ul>
+      <li> <a href="{% url 'models' %}">Models</a></li>
+      <li><a href="{% url 'add_model' %}">Add model</a></li>
+      <li><a  href="{% url 'logout' %}">Logout</a></li>
+      
+    </ul>
+  </nav>
+
+  {% endif %}
