@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from .forms import *
 from .models import *
 from pprint import pprint
+from django.http import JsonResponse
 
 ### DASH
 def home(request):
@@ -13,9 +14,7 @@ def home(request):
         return render(request, 'pages/auth/login.html')
     else:
         return render(request, 'home.html')
-
 ### MODELS
-
 def model_view(request, slug):
     if request.user.is_anonymous:
         messages.success(request, 'You need to connect to see this page')
@@ -34,16 +33,14 @@ def models(request):
 
 def add_model(request):
     form = AddModelForm(request.POST or None, request.FILES or None)
-    
     if request.method == 'POST':
         if form.is_valid():
-            
             libelle = form.cleaned_data['libelle']
             description = form.cleaned_data['description']
             score = 100
             path = form.cleaned_data['path']
-            state = False
-            status = False
+            state = 'DE'
+            status = 'IN'
             slug = slugify(libelle, allow_unicode=True)
             save_by = request.user
             add_model = Model(slug=slug, libelle=libelle, description=description, score=score, path=path, state=state, status=status, saved_by=save_by)
@@ -51,7 +48,7 @@ def add_model(request):
             messages.success(request, 'The model was added successfully')
             return redirect('models')
         else:
-            # Form is not valid, return a response
+            messages.success(request, 'An error has occurred')
             return render(request, 'pages/model/add.html', {'form': form})
     else:
         if request.user.is_anonymous:
@@ -69,18 +66,16 @@ def model_edit(request, slug):
         form = AddModelForm(request.POST or None, request.FILES or None, instance=current_model)
         if request.method == 'POST':
             if form.is_valid():
-            
                 form.save()
                 messages.success(request, 'The model has been successfully modified')
                 return redirect('models')
             else:
-                # Form is not valid, return a response
+                messages.success(request, 'An error has occurred')
                 return render(request, 'pages/model/edit.html', {'form': form, 'model': current_model})
         else:
             return render(request, 'pages/model/edit.html', {'form': form, 'model': current_model})
 
 ### Experience
-
 def experiences(request):
     if request.user.is_anonymous:
         messages.success(request, 'You need to connect to see this page')
@@ -99,21 +94,17 @@ def add_experience(request):
         
         if request.method == 'POST':
             if form.is_valid():
-                
                 libelle = form.cleaned_data['libelle']
                 description = form.cleaned_data['description']
                 slug = slugify(libelle, allow_unicode=True)
                 save_by = request.user
-
                 add_epx= Experience(slug=slug, libelle=libelle, description=description, saved_by=save_by)
                 add_epx.save()
                 messages.success(request, 'The Experience was added successfully')
                 return redirect('experiences')
             else:
-                # Form is not valid, return a response
-                messages.error(request, 'The Experience was added successfully')
+                messages.success(request, 'An error has occurred')
                 return render(request, 'pages/experiences/add.html', {'form': form})
-        
         return render(request, 'pages/experiences/add.html', {'form': form})
 
 def experience_edit(request, slug):
@@ -125,12 +116,10 @@ def experience_edit(request, slug):
         form = AddExperinceForm(request.POST or None, request.FILES or None, instance=current_experience)
         if request.method == 'POST':
             if form.is_valid():
-            
                 form.save()
                 messages.success(request, 'The experience has been successfully modified')
                 return redirect('experiences')
             else:
-                # Form is not valid, return a response
                 return render(request, 'pages/experiences/edit.html', {'form': form, 'experience': current_experience})
         else:
             return render(request, 'pages/experiences/edit.html', {'form': form, 'experience': current_experience})
@@ -144,7 +133,6 @@ def experience_view(request, slug):
         return render(request, 'pages/experiences/view.html', {'experience': experience})
 
 ### Deploiement
-
 def deploiements(request):
     if request.user.is_anonymous:
         messages.success(request, 'You need to connect to see this page')
@@ -153,6 +141,11 @@ def deploiements(request):
         deploiements = Deploiement.objects.all()
         return render(request, 'pages/deploiements/list.html', {'deploiements': deploiements})
     
+def load_models(request):
+    experience_id = request.GET.get('experience')
+    models = Model.objects.filter(experience_id=experience_id).all()
+    return JsonResponse(list(models.values('id', 'libelle')), safe=False)
+
 def add_deploiement(request):
     if request.user.is_anonymous:
         messages.success(request, 'You need to connect to see this page')
@@ -162,23 +155,14 @@ def add_deploiement(request):
         
         if request.method == 'POST':
             if form.is_valid():
-                
-                model = form.cleaned_data['model']
-                experience = form.cleaned_data['experience']
-                status = form.cleaned_data['status']
-                state = form.cleaned_data['state']
-                slug = slugify(model, allow_unicode=True)
-                save_by = request.user
-
-                add_dep= Deploiement(slug=slug, model=model, experience=experience, status=status, state=state, saved_by=save_by)
-                add_dep.save()
+                deploiement = form.save(commit=False)
+                deploiement.saved_by = request.user
+                deploiement.save()
                 messages.success(request, 'The Deploiement was added successfully')
                 return redirect('deploiements')
             else:
-                # Form is not valid, return a response
-                messages.error(request, 'The Deploiement was added successfully')
+                # dd(form.errors)
                 return render(request, 'pages/deploiements/add.html', {'form': form})
-        
         return render(request, 'pages/deploiements/add.html', {'form': form})
     
 def deploiement_edit(request, slug):
@@ -190,12 +174,10 @@ def deploiement_edit(request, slug):
         form = AddDeploiementForm(request.POST or None, request.FILES or None, instance=current_deploiement)
         if request.method == 'POST':
             if form.is_valid():
-            
                 form.save()
                 messages.success(request, 'The deploiement has been successfully modified')
                 return redirect('deploiements')
             else:
-                # Form is not valid, return a response
                 return render(request, 'pages/deploiements/edit.html', {'form': form, 'deploiement': current_deploiement})
         else:
             return render(request, 'pages/deploiements/edit.html', {'form': form, 'deploiement': current_deploiement})
@@ -223,11 +205,8 @@ def login_user(request):
             return render(request, 'pages/auth/login.html')
     else:
         return redirect('home')
-    
-
 
 def logout_user(request):
     logout(request)
     messages.success(request, 'You have been successfully logged out')
     return redirect('home')
-    
