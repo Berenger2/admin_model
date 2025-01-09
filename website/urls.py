@@ -23,7 +23,7 @@ urlpatterns = [
     path('deploiement/add/',views.add_deploiement, name='add_deploiement'),
     path('deploiement/edit/<str:slug>',views.deploiement_edit, name='deploiement_edit'),
     path('deploiement/<str:slug>',views.deploiement_view, name='deploiement_view'),
-     path('ajax/load-models/', views.load_models, name='ajax_load_models'),
+    path('ajax/load-models/', views.load_models, name='ajax_load_models'),
 
     # path('model/<str:>',views.logout_user, name='logout'),
 ]
