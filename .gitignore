@@ -1,0 +1,16 @@
+djang/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.bak
+*.bak.*
+*.~*
+*~
+.vscode/
+.idea/
+*.sqlite3
+.env
+*.log
